@@ -1,0 +1,14 @@
+.git
+.github
+.vscode
+.idea
+.builds
+coverage.out
+README.html
+CHANGELOG.html
+CHANGELOG_16_22.html
+CHANGELOG_8_15.html
+LICENSE.html
+**/.DS_Store
+**/pb_data
+**/node_modules
