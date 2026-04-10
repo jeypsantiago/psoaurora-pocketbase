@@ -28,7 +28,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: '>=1.26.1'
+          go-version: '1.25.1'
 
       # This step usually is not needed because the /ui/dist is pregenerated locally
       # but its here to ensure that each release embeds the latest admin ui artifacts.
@@ -44,7 +44,7 @@ jobs:
       #   run: go run ./plugins/jsvm/internal/types/types.go
 
       - name: Run tests
-        run: go test ./...
+        run: go test -p 1 ./...
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
