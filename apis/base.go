@@ -35,6 +35,7 @@ func NewRouter(app core.App) (*router.Router[*core.RequestEvent], error) {
 	pbRouter.Bind(BodyLimit(DefaultMaxBodySize))
 
 	apiGroup := pbRouter.Group("/api")
+	bindInstallerApi(app, apiGroup)
 	bindSettingsApi(app, apiGroup)
 	bindCollectionApi(app, apiGroup)
 	bindRecordCrudApi(app, apiGroup)

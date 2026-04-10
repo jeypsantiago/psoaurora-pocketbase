@@ -24,6 +24,17 @@ PocketBase.prototype.logout = function (redirect = true) {
 };
 
 /**
+ * Loads the current installer bootstrap status.
+ *
+ * @return {Promise<{requiresSetup: Boolean, setupToken?: String}>}
+ */
+PocketBase.prototype.getInstallerStatus = function () {
+    return this.send("/api/installer/status", {
+        method: "GET",
+    });
+};
+
+/**
  * Generic API error response handler.
  *
  * @param  {Error}   err        The API error itself.

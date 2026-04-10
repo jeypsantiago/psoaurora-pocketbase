@@ -4,9 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"os"
 	"strings"
-	"time"
 
 	"github.com/fatih/color"
 	"github.com/pocketbase/dbx"
@@ -16,23 +14,17 @@ import (
 
 // DefaultInstallerFunc is the default PocketBase installer function.
 //
-// It will attempt to open a link in the browser (with a short-lived auth
-// token for the systemSuperuser) to the installer UI so that users can
-// create their own custom superuser record.
+// It will attempt to open a link in the browser to the dashboard login page
+// where users can complete the first superuser setup flow.
 //
 // See https://github.com/pocketbase/pocketbase/discussions/5814.
-func DefaultInstallerFunc(app core.App, systemSuperuser *core.Record, baseURL string) error {
-	token, err := systemSuperuser.NewStaticAuthToken(30 * time.Minute)
-	if err != nil {
-		return err
-	}
-
+func DefaultInstallerFunc(_ core.App, _ *core.Record, baseURL string) error {
 	// launch url (ignore errors and always print a help text as fallback)
-	url := fmt.Sprintf("%s/_/#/pbinstal/%s", strings.TrimRight(baseURL, "/"), token)
+	url := fmt.Sprintf("%s/_/#/login", strings.TrimRight(baseURL, "/"))
 	_ = osutils.LaunchURL(url)
 	color.Magenta("\n(!) Launch the URL below in the browser if it hasn't been open already to create your first superuser account:")
 	color.New(color.Bold).Add(color.FgCyan).Println(url)
-	color.New(color.FgHiBlack, color.Italic).Printf("(you can also create your first superuser by running: %s superuser upsert EMAIL PASS)\n\n", executablePath())
+	color.New(color.FgHiBlack, color.Italic).Printf("(complete the setup from the dashboard login page)\n\n")
 
 	return nil
 }
@@ -85,12 +77,4 @@ func findOrCreateInstallerSuperuser(app core.App) (*core.Record, error) {
 	}
 
 	return record, nil
-}
-
-func executablePath() string {
-	if osutils.IsProbablyGoRun() {
-		return "go run ."
-	}
-
-	return os.Args[0]
 }
