@@ -255,17 +255,16 @@ func decodeInstallerStatus(t testing.TB, recorder *httptest.ResponseRecorder) in
 func deleteRealSuperusers(t testing.TB, app *tests.TestApp) {
 	t.Helper()
 
-	superusers, err := app.FindAllRecords(core.CollectionNameSuperusers, dbx.Not(dbx.HashExp{
-		"email": core.DefaultInstallerEmail,
-	}))
+	col, err := app.FindCachedCollectionByNameOrId(core.CollectionNameSuperusers)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	for _, superuser := range superusers {
-		if err := app.Delete(superuser); err != nil {
-			t.Fatal(err)
-		}
+	_, err = app.DB().Delete(col.Name, dbx.Not(dbx.HashExp{
+		"email": core.DefaultInstallerEmail,
+	})).Execute()
+	if err != nil {
+		t.Fatal(err)
 	}
 }
 
